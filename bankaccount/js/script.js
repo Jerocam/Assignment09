@@ -63,9 +63,9 @@ $(()=>{
     //VARIABLE TO GET BANKACCOUNT FUNCTION
     let acccount = bankAccount();
     
-    //OPTIONAL - BUTTONS DISABLED UNTIL CLICK THE BUTTON NAME (ONLY IF IT FINDS NAMES IN THE ACCOUNT)
-    $('#dd').attr('disabled', true);
-    $('#ww').attr('disabled', true);
+    //OPTIONAL - DISABLED BUTTONS UNTIL CLICK THE BUTTON NAME (ONLY IF IT FINDS NAMES IN THE ACCOUNT)
+    $('#dd').attr('disabled', true); //BUTTON DEPOSIT
+    $('#ww').attr('disabled', true); //BUTTON WITHDRAW
 
     //BUTTON NAME
     $('#nn').click(function(e) { 
