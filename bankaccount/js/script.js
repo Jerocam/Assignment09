@@ -5,6 +5,7 @@ let bankAccount = function (ownerName){
 "use strict";
     
     //PRIVATE VARIABLES & FUNCTIONS
+
     //BALANCE AND OWNER
     let balance = 500, owner = ownerName;
 
@@ -13,18 +14,39 @@ let bankAccount = function (ownerName){
     
         //DEPOSIT
         let deposit = function (depositAmount){
-            balance += depositAmount;
-        };
+            depositAmount = parseFloat(window.prompt("Enter your deposit"));
+            while (isNaN(depositAmount)){
+                alert("Error! Please enter only numbers");
+                depositAmount = parseFloat(window.prompt("Enter your deposit"));
+            }
+            balance += depositAmount; //+ $ FROM PROMPT
+
+            $('div').append("<h3 class=\"nb\"> Deposited!: +$"+depositAmount+"</h3>");
+            $('.nb').css("color", 'green');
+        }
 
         //WITHDRAW
         let withdraw = function (withdrawalAmount){
-            balance -= withdrawalAmount;
-        };
+            withdrawalAmount = parseFloat(window.prompt("Enter your withdrawal"));
+
+        while (isNaN(withdrawalAmount)){
+            alert("Error! Please enter only numbers");
+            withdrawalAmount = parseFloat(window.prompt("Enter your withdrawal"));}
+
+        while (withdrawalAmount > 300){ //IF YOU WITHDRAW MORE THAN 300, IT WONT ALLOW TO PROCESS IT
+            alert("Sorry! The Limit of withdrawal is $300.00");
+            withdrawalAmount = parseFloat(window.prompt("Enter your withdrawal less than $300.00"));}
+
+        balance -= withdrawalAmount;    // - $ FROM PROMPT
+
+        $('div').append("<h3 class=\"negb\"> Withdrawed!: -$"+withdrawalAmount+"</h3>");
+        $('.negb').css("color", 'red');
+        }
 
         //BALANCE
         let getBalance = function (){
             return balance;
-        };
+        }
 
         //OWNER
         let getOwnerName = function (){
@@ -32,28 +54,25 @@ let bankAccount = function (ownerName){
             //OPTIONAL - ACCEPT TO OPEN THE ACCOUNT IF IT FINDS NAMES(MATHC)
             if(accounts.indexOf(owner)!==-1) {
                 alert("Welcome to the Bank Jerocam!");
-                $("div h3.accH").text("Your Account Name: "+owner);
-                $('#nn').attr('disabled', true);
-                $('#dd').attr('disabled', false);
-                $('#ww').attr('disabled', false);
+                $('#nn').text(owner).attr('disabled', true);
+                $('#dd').attr('hidden', false);
+                $('#ww').attr('hidden', false);
                 $("div h3.balH").text("Your Current Balance: $"+balance);
                 $('#ex').show();
-                return owner;   //RETURN OWNERNAME
             }
             //OPTIONAL - NOT FOUND ACCOUNT NAMES IN THE BANK
             else {
                 alert("Sorry, we do not have your account in the bank");
-                return false;
             }
-        };
+        }
 
         //PUBLIC METHODS TO ACCESS THE PRIVATE VARIABLES/FUNCTIONS
         return {
-            rDeposit:deposit,   //ACCESS TO FUNCTION DEPOSIT
-            rWithdraw:withdraw, //ACCESS TO FUNCTION WITHDRAWAL
-            rGetBalance:getBalance, //ACCESS TO FUNCTION BALANCE
-            rGetOwnerName:getOwnerName  //ACCESS TO FUNCTION OWNER/ACCOUNT NAMES
-        };
+            deposit,   //ACCESS TO FUNCTION DEPOSIT
+            withdraw, //ACCESS TO FUNCTION WITHDRAWAL
+            getBalance, //ACCESS TO FUNCTION BALANCE
+            getOwnerName  //ACCESS TO FUNCTION OWNER/ACCOUNT NAMES
+        }
 
 };
 
@@ -64,67 +83,44 @@ $(()=>{
     let acccount = bankAccount();
     
     //OPTIONAL - DISABLED BUTTONS UNTIL CLICK THE BUTTON NAME (ONLY IF IT FINDS NAMES IN THE ACCOUNT)
-    $('#dd').attr('disabled', true); //BUTTON DEPOSIT
-    $('#ww').attr('disabled', true); //BUTTON WITHDRAW
+    $('#dd').attr('hidden', true); //HIDE BUTTON DEPOSIT
+    $('#ww').attr('hidden', true); //HIDE BUTTON WITHDRAW
 
     //BUTTON NAME
-    $('#nn').click(function(e) { 
+    $('#nn').click(function(e) {
         e = window.prompt("Enter your name");
-        while (!e.match(/^[a-zA-Z]+$/)) {
-            e = prompt("Please, insert only letters to proceed!");
-        }
-        let x = bankAccount(e); //PASS OWNERNAME VALUE TO BANKACCOUNT
-        x.rGetOwnerName();
-       $('.dt').text('');   //CLEAR THE BALANCE WHEN CLICK NAME BUTTON
-       $('.wl').text('');   //CLEAR THE WITHDRAWAL WHEN CLICK NAME BUTTON
+            while (!e.match(/^[a-zA-Z]+$/)) {
+                e = prompt("Please, insert only letters to proceed!");
+            }
+        let x = bankAccount(e); //PASS NAMES (ownername) AS VALUES TO BANKACCOUNT FUNCTION
+        x.getOwnerName();
     });
     
     //BUTTON DEPOSIT
     $('#dd').click(function () { 
-        let d = parseFloat(window.prompt("Enter your deposit"));
-
-        while (isNaN(d)){
-            alert("Error! Please enter only numbers");
-            d = parseFloat(window.prompt("Enter your deposit"));}
-
-        acccount.rDeposit(d);   //DEPOSIT AMOUNT FROM PROMPT
-
-        let newBalance = acccount.rGetBalance();    //GET NEW BALANCE AFTER DEPOSIT
+        acccount.deposit();   //DEPOSIT AMOUNT FROM PROMPT
+        let newBalance = acccount.getBalance();    //GET NEW BALANCE AFTER DEPOSIT
 
         //DISPLAY THE BALANCES AND DEPOSITS
-        $('div').append("<h3 class=\"dt\"> Deposited!: $"+d+"<br>New Balance: $"+newBalance+"</h3>");
-        $(".dt").css("color", 'green');
+        $('div').append("<h3>New Balance: $"+newBalance+"</h3>");
         
         //OPTIONAL - IF THE BALANCE IS ABOVE 0 AFTER DEPOSIT SOME $, IT WILL ACTIVATE WITHDRAWAL BUTTON 
-        if (newBalance>0){ 
-            $('#ww').attr('disabled', false);
+        if (newBalance > 0){ 
+            $('#ww').attr('hidden', false);
         }
-        
     });
 
     //BUTTON WITHDRAW
-    $('#ww').click(function (w) {
-        w= parseFloat(window.prompt("Enter your withdrawal"));
-
-        while (isNaN(w)){
-            alert("Error! Please enter only numbers");
-            w = parseFloat(window.prompt("Enter your withdrawal"));}
-
-        while (w>300){
-            alert("Sorry! The Limit of withdrawal is $300.00");
-            w = parseFloat(window.prompt("Enter your withdrawal less than $300.00"));}
-
-        acccount.rWithdraw(w);  //PASS VALUES OF WITHDRAWAL TO BANKACCOUNT
-    
-        let newBalance2 = acccount.rGetBalance();   //GET BALANCE
+    $('#ww').click(function () {
+        acccount.withdraw();  //PASS VALUES OF WITHDRAWAL TO BANKACCOUNT
+        let newBalance2 = acccount.getBalance();   //GET BALANCE
 
         //DISPLAY WITHDRAWALS AND BALANCES
-        $('div').append("<h3 class=\"wl\"> Withdrawed!: $"+w+"<br>New Balance: $"+newBalance2+"</h3>");
-        $('.wl').css("color", 'red');
+        $('div').append("<h3>New Balance: $"+newBalance2+"</h3>");
         
         //OPTIONAL - IF THE BALANCE IS BELOW 0, IT BLOCKS WITHDRAWAL BUTTON TO AVOID CHARGE MORE UNTIL BALANCE IS ABOVE 0 (DEPOSIT SOME)
         if (newBalance2<0){
-            $('#ww').attr('disabled', true);
+            $('#ww').attr('hidden', true);
             alert("Now is Insufficient $! You cannot withdrawal more");
         }
     });
@@ -137,3 +133,11 @@ $(()=>{
 });    
 
 
+//THE LIST OF ACCOUNTS NAMES TO ENTER/OPEN THE JEROCAM BANK 2020
+// Jeronimo
+// Vanessa
+// Lucia
+// Luis
+// Scotty
+// Rogelio
+// Marisa
