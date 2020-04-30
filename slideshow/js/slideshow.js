@@ -4,7 +4,7 @@
 var createSlideshow = function () {
     "use strict";
     // PRIVATE VARIABLES AND FUNCTIONS
-    var timer, play = true, nodes, img, stopSlideShow, displayNextImage, setPlayText;
+    var timer, play = true, nodes, img, stopSlideShow, displayNextImage, setPlayText, setPlaySpeed;
     
     let speed = 2000; //VARIABLE SPEED
 
@@ -24,6 +24,16 @@ var createSlideshow = function () {
         var image = img.cache[img.counter];
         nodes.image.src = image.src;
         nodes.caption.innerHTML = image.title;
+    };
+
+    setPlaySpeed = function (){
+    
+        let newSpeed = parseInt(window.prompt("Current Speed Shown: "+speed+"\n\Enter new speed of the slideshow"));
+            while(isNaN(newSpeed)){
+                alert("Error! Please enter only numbers");
+                newSpeed = parseInt(window.prompt("Please enter only numbers"));
+            }
+        return speed = newSpeed;    //RETURN NEW SPEED FROM PROMPT
     };
 
     setPlayText = function (btn) {
@@ -58,19 +68,14 @@ var createSlideshow = function () {
             return this;
         },
 
-        // getSpeed: function (){       
-        //    //?? Still struggling on methods for passing to setspeed!!
+        // getSpeed: function (){
+        // ??? IM NOT SURE WHAT I SHOULD PUT HERE
         // },
 
         setSpeed: function () {
-            speed = parseInt(window.prompt("Change the speed of the slideshow - Current Speed Shown "+speed));
-            while(isNaN(speed)){
-                alert("Error! Please enter only numbers");
-                speed = parseInt(window.prompt("Please enter only numbers"));
-            }
-            stopSlideShow(); //CLEAR TIME/SPEED
-            timer = setInterval(displayNextImage, speed); // CHANGE SPEED FROM PROMPT
-
+            setPlaySpeed();
+            stopSlideShow();
+            timer = setInterval(displayNextImage, speed);
         },
 
         createToggleHandler: function () {
